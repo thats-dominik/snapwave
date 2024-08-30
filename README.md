@@ -2,7 +2,7 @@
 
 ## Übersicht
 
-Hier findet ihr den photo-feed. In diesem Repository zeige ich euch, wie sich meine persönliche Website entwickelt. Hier sieht man meine Leidenschaft für die Fotografie. Der Schwerpunkt liegt dabei auf den Bereichen Street-, Auto-, Landschafts- und Astrofotografie. Das Hauptmerkmal der Seite ist eine interaktive und visuell ansprechende Galerie. Die habe ich nach den besten Vorbildern wie VSCO und Pinterest gestaltet.
+Hier findet ihr snapwave - eine innovative Fotogallerie. In diesem Repository zeige ich euch, wie sich meine persönliche Website entwickelt. Hier sieht man meine Leidenschaft für die Fotografie. Der Schwerpunkt liegt dabei auf den Bereichen Street-, Auto-, Landschafts- und Astrofotografie. Das Hauptmerkmal der Seite ist eine interaktive und visuell ansprechende Galerie. Die habe ich nach den besten Vorbildern wie VSCO und Pinterest gestaltet.
 ## Konzept
 
 Die Idee hinter diesem Projekt ist es, einen digitalen Raum zu schaffen, der nicht nur meine Arbeiten zeigt, sondern auch ein ansprechendes Benutzererlebnis bietet. Die Galerie wird folgende Funktionen bieten:
