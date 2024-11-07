@@ -20,7 +20,7 @@ Die Idee hinter diesem Projekt ist es, einen digitalen Raum zu schaffen, der nic
 
 ## Technologie-Stack
 
-- **Vue.js**: Das Frontend der Galerie wird mit Vue.js entwickelt, um eine reaktive und flexible Benutzeroberfläche zu schaffen.
+- **Next.js**: Das Frontend der Galerie wird mit Next.js entwickelt, um eine reaktive und flexible Benutzeroberfläche zu schaffen.
 - **Figma**: Für die Gestaltung und Einrichtung des Designs verwende ich Figma, um ein stimmiges und ansprechendes Layout zu entwerfen.
 
 ## Einrichtung
