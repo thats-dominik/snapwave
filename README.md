@@ -25,7 +25,8 @@ Die Idee hinter diesem Projekt ist es, einen digitalen Raum zu schaffen, der nic
 
 ## Einrichtung
 
-- **
+- **Next.js** muss installiert und eingerichtet werden. Hierfür sollte Node.js installiert sein, um die Entwicklungsumgebung zu starten.
+- Figma wird verwendet, um die Designelemente zu planen und eine einheitliche Struktur zu gewährleisten.
 
 ## Zu Implementierende Funktionen
 
@@ -49,7 +50,7 @@ Die Idee hinter diesem Projekt ist es, einen digitalen Raum zu schaffen, der nic
   Abgabedatum: 08. Oktober 2024  
   - [ ] Ziel erreicht
 
-- **Phase 5: Copyright-Überlegungen, Programmieren mit Vue.js / JavaScript, Umgang mit HTML 5**  
+- **Phase 5: Copyright-Überlegungen, Programmieren mit Next.js / JavaScript, Umgang mit HTML 5**  
   Abgabedatum: 10. Februar 2025  
   - [ ] Ziel erreicht
 
@@ -59,12 +60,12 @@ Die Idee hinter diesem Projekt ist es, einen digitalen Raum zu schaffen, der nic
 
 ## Bildquelle
 
-Die meisten Bilder stammen aus meinen Reisen und Hobbys, was einen persönlichen Einblick in meine Erlebnisse und Interessen bietet.
+Alle Bilder stammen aus meinen Reisen und Hobbys, was einen persönlichen Einblick in meine Erlebnisse und Interessen bietet.
 
 ## Mitarbeit
 
-- **
+- M
 
 ## Lizenz
 
-- **
+- 
