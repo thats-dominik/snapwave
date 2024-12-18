@@ -1,5 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@200;400;700;900&display=swap');
 
+/* Scrollbar Styles */
+*::-webkit-scrollbar {
+    width: 3px;
+    border-radius: none;
+}
+
+*::-webkit-scrollbar-thumb {
+    background: #000;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background: #000;
+}
+
 /* Allgemeine Stile */
 body {
     font-family: 'Raleway', sans-serif;
@@ -8,13 +22,32 @@ body {
     box-sizing: border-box;
 }
 
+.masonry-grid {
+    display: flex; /* Flexbox für Masonry */
+    margin-left: -10px; /* Optional: Entfernt negativen Abstand */
+    width: auto; /* Verhindert Einschränkungen der Breite */
+}
+
+.masonry-grid_column {
+    padding-left: 10px; /* Abstand zwischen den Spalten */
+    background-clip: padding-box;
+}
+
 /* Gallery Container */
 .gallery {
-    column-count: 2; /* Zwei Spalten */
-    column-gap: 12px; /* Abstand zwischen den Spalten */
     padding: 10px;
     background-color: #fff;
     border-left: 2px solid #000;
+    margin: 0 auto; /* Zentriert die Galerie */
+    max-width: 900px; /* Optional: Maximale Breite für zwei Spalten */
+}
+
+/* Einzelne Posts */
+.gallery-item {
+    display: flex;
+    flex-direction: column; /* Stapelt Bild und Text */
+    background: #fff;
+    overflow: hidden;
 }
 
 .gallery h2 {
@@ -28,31 +61,79 @@ body {
     height: 40px; /* Gleiche Höhe sicherstellen */
     text-transform: uppercase; /* Großbuchstaben */
 }
+.gallery a {
+    color: #000;
+    text-align: left; /* Links ausrichten */
+    margin: -0.6rem 0 0 -0.6rem; /* Keine zusätzlichen Abstände */
+    padding-left: 10px; /* Optionaler Abstand vom linken Rand */
+    font-size: 18px; /* Einheitliche Schriftgröße */
+    font-weight: 700; /* Raleway-Bold */
+    display: flex;
+    align-items: center; /* Vertikale Ausrichtung */
+    height: 40px; /* Gleiche Höhe sicherstellen */
+    text-transform: uppercase; /* Großbuchstaben */
+    text-decoration: underline 2px; /* Keine Unterstreichung */
+    transition: color 0.3s ease; /* Smooth transition */
+}
 
-/* Einzelne Posts */
-.gallery-item {
-    display: inline-block; /* Wichtig für das Masonry-Layout */
-    width: 100%; /* Passt die Breite an die Spalte an */
-    margin: 0 0 0 -10px; /* Abstand zwischen den Posts */
-    overflow: hidden; /* Inhalt begrenzen */
-    padding: 10px;
+.gallery a:hover {
+    color: #030738;
+}
+
+#gallery-title-arrow-icon {
+    text-decoration: underline;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.gallery-title {
+    margin: 0rem 0 0.5rem 0;
+}
+
+.gallery-date {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400; /* Raleway Regular */
+    font-size: 14px;
+    color: #000; /* Schwarz */
+    margin: 1rem 0 0.7rem 0; /* Abstand oben und unten */
+    text-align: left; /* Ausrichtung */
+    display: block; /* Sicherstellen, dass es unter dem Bild angezeigt wird */
 }
 
 /* Bilder in Posts */
 .gallery-item img {
-    margin: -0.5rem 0 -0.5rem 0;
-    width: 100%;
+    margin: -0.5rem 0 -0.8rem 0;
+    width: 100%; /* Breite auf 100% des Containers */
+    max-width: 18.75rem; /* Maximalbreite setzen, z.B. 300px in rem */
+    object-fit: cover; /* Zuschneiden der Bilder, um die Höhe zu respektieren */
+    display: block; /* Bild als Blockelement */
     height: auto;
-    object-fit: cover;
 }
 
 /* Text in Posts */
 .gallery-item p {
-    margin: -0.6rem 0 -0.3rem 0;
-    color: #555;
+    margin: 0 0 0.7rem 0;
+    color: #000;
     font-size: 14px;
     text-align: left;
     font-weight: 200; /* Raleway-ExtraLight */
+}
+
+.gallery-title-place {
+    display: flex;
+    align-items: center;
+    gap: 0.1rem; /* Abstand zwischen den Elementen */
 }
 
 /* Homepage Layout */
@@ -62,48 +143,57 @@ body {
     gap: 0;
 }
 
-/* Highlights Section */
+/* Highlights-Section */
 .highlights {
-    grid-column: 1 / 2;
-    background-color: #fff;
-    padding: 20px; /* Größerer Innenabstand */
-}
-
-.highlights h2 {
-    font-size: 18px; /* Kleiner, um Platz zu sparen */
-    font-weight: 700; /* Raleway-Bold */
-    text-transform: uppercase; /* Großbuchstaben */
-    margin-bottom: 5px; /* Abstand nach unten reduzieren */
-    margin-top: 0; /* Reduziert Abstand zur oberen Linie */
-    text-align: center; /* Zentriert den Titel */
-}
-
-.highlight-item {
-    background-color: #f0f0f0;
-    padding: 10px;
-    overflow: hidden; /* Ensures content stays within the box */
     display: flex;
     flex-direction: column;
-    align-items: center;
+    padding: 0 0 0 0;
+    gap: 1rem;
+    width: 100%; /* 1/2 der Breite */
+    box-sizing: border-box;
 }
 
-.highlight-image {
-    width: 100%; /* Ensures it spans the container's width */
-    height: auto; /* Keeps aspect ratio */
-    aspect-ratio: 1 / 1.17647; /* Ensures the proper aspect ratio */
-    object-fit: cover; /* Ensures the image covers the area */
-}
-
-.highlight-item img {
+/* Einzelne Highlight-Items */
+.highlight-item {
     width: 100%;
-    height: 200px;
-    object-fit: cover;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    text-align: left;
+    padding: 0 0 0 0;
 }
 
+/* Videos */
+.highlight-video {
+    width: 100%; /* Passt das Video an die Breite seines Containers an */
+    max-width: max-content; /* Maximale Breite des Videos */
+    height: auto; /* Beibehaltung des Seitenverhältnisses */
+    margin-bottom: 0.5rem;
+    outline: none;
+    overflow: hidden;
+}
+
+/* Titel */
+.highlight-item h3 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin: 0.5rem 1rem 1rem 1rem;
+    font-family: 'Raleway', sans-serif;
+}
+
+/* Beschreibung */
 .highlight-item p {
-    margin-top: 10px;
+    font-size: 1rem;
     color: #555;
-    font-weight: 200; /* Raleway-ExtraLight */
+    font-family: 'Raleway', sans-serif;
+    margin: 0.5rem 1rem 0 1rem;
+}
+
+.markdown-description {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 200; /* Raleway Light */
+    font-size: 1rem;
+    margin: 0.5rem 0;
 }
 
 /* Menü Section */
@@ -161,7 +251,7 @@ body {
     background-color: #fff;
     padding: 10px 20px;
     border-bottom: 2px solid #000;
-    margin-right: 1.25rem;
+    margin-right: 1rem;
     flex-wrap: nowrap;
     overflow: hidden;
 }
@@ -228,5 +318,20 @@ body {
     .navbar-right ul {
         flex-direction: column;
         gap: 10px;
+    }
+}
+
+h3:hover .highlight-arrow {
+    transform: translateX(5px); /* Pfeil bewegt sich leicht nach rechts beim Hover */
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }

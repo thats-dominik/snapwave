@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@200;400;700;900&display=swap');
+
+/* Allgemeine Stile */
+body {
+  margin: 0;
+  font-family: 'Raleway', sans-serif;
+  overscroll-behavior: contain;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+html, body {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* Verhindert horizontales Scrollen */
+}
+
+/* Masonry Gallery Layout */
+.gallery_page {
+    display: flex;
+    padding: 0.5rem 1rem 0 0.5rem;
+    gap: 0.5rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.gallery_page-column {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.gallery_page-item {
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+
+.gallery_page-item img {
+  display: block;
+  width: 100%;
+  object-fit: cover;
+  opacity: 0; /* Startzustand für Fade-In */
+  animation: fadeIn 0.5s forwards;
+
+}
+
+.gallery_page-item:hover {
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.8); /* Schatten hinzufügen */
+}
+
+/* Fade-In Effekt */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Lade-Element */
+.loading {
+  text-align: center;
+  font-size: 1rem;
+  color: #666;
+  margin: 1rem 0;
+}
