@@ -3,9 +3,10 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 import Masonry from "react-masonry-css";
-import "@/app/gallery/gallery.css";
+import "@/app/gallery/gallery.css"; // Import des angepassten CSS
 import Modal from "@/app/components/Modal";
 import useEscape from "@/app/components/handleEsc";
+import Image from "next/image";
 
 // Supabase-Client konfigurieren
 const supabase = createClient(
@@ -56,6 +57,19 @@ export default function GalleryPage() {
 
   return (
     <div>
+      {/* Lade-Indikator */}
+      {isLoading && (
+        <div className="loading-overlay">
+          <div className="loading">
+            <img
+              src="https://ygzqbzzaabuwtdudfvsm.supabase.co/storage/v1/object/public/snapwave-media/snapwave-logo.png"
+              alt="loader"
+              className="static-loader"
+            />
+          </div>
+        </div>
+      )}
+
       <div className="gallery_page-container">
         {/* Masonry Grid */}
         <Masonry
@@ -63,7 +77,7 @@ export default function GalleryPage() {
             default: 5,
             1200: 4,
             768: 3,
-            480: 2
+            480: 2,
           }}
           className="gallery_page"
           columnClassName="gallery_page-column"
@@ -71,7 +85,7 @@ export default function GalleryPage() {
           {galleryItems.map((item) => (
             <div key={item.id} className="gallery_page-item">
               <img
-                src={getOptimizedImageUrl(item.image_url)}
+                src={getOptimizedImageUrl(item.low_image_url)}
                 alt={`Bild ${item.id}`}
                 loading="lazy"
                 onClick={() => setSelectedItem(item)}
@@ -80,9 +94,6 @@ export default function GalleryPage() {
           ))}
         </Masonry>
       </div>
-
-      {/* Lade-Indikator */}
-      {isLoading && <div className="loading">Lädt...</div>}
 
       {/* Modal */}
       {selectedItem && (

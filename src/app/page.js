@@ -18,86 +18,90 @@ const supabase = createClient(
 // Hilfsfunktion zur Optimierung der Bildgröße
 const getOptimizedImageUrl = (url) => {
   const screenWidth = window.innerWidth;
-  const width = screenWidth > 1200 ? 800 : screenWidth > 768 ? 500 : 300;
+  const width = screenWidth > 1800 ? 1000 : screenWidth > 1200 ? 800 : 500;
   return `${url}?width=${width}&quality=50`;
 };
 
 export default function HomePage() {
-  const [galleryItems, setGalleryItems] = useState([]); // Galerie-Daten
-  const [highlights, setHighlights] = useState([]); // Highlights
-  const [filteredItems, setFilteredItems] = useState([]); // Gefilterte Inhalte
-  const [currentFilter, setCurrentFilter] = useState(null); // Aktueller Filter
-  const [selectedItem, setSelectedItem] = useState(null); // Ausgewählter Post
+  const [galleryItems, setGalleryItems] = useState([]);
+  const [highlights, setHighlights] = useState([]);
+  const [filteredItems, setFilteredItems] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const isLoadingGallery = useRef(false);
   const loader = useRef(null);
 
   const ITEMS_PER_PAGE = 5;
 
-  // Galerie-Daten abrufen (Pagination)
+  // Alle Daten laden (Highlights und Galerie)
   useEffect(() => {
-    async function fetchGalleryItems() {
-      const { data, error } = await supabase
-        .from("posts")
-        .select("*")
-        .neq("type", "highlights")
-        .range((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE - 1);
+    const fetchData = async () => {
+      try {
+        // Highlights laden
+        const highlightsResult = await supabase
+          .from("posts")
+          .select("*")
+          .eq("type", "highlights");
 
-      if (error) {
-        console.error("Fehler beim Abrufen der Galerie-Daten:", error);
-      } else {
-        setGalleryItems((prevItems) => [...prevItems, ...data]);
-        setFilteredItems((prevItems) => [...prevItems, ...data]); // Initial auch in Filter setzen
-        if (data.length < ITEMS_PER_PAGE) setHasMore(false);
+        if (highlightsResult.error) {
+          console.error("Fehler beim Abrufen der Highlights:", highlightsResult.error.message);
+        } else {
+          setHighlights(highlightsResult.data);
+        }
+
+        // Galerie laden
+        const galleryResult = await supabase
+          .from("posts")
+          .select("*")
+          .neq("type", "highlights")
+          .order("id", { ascending: true })
+          .range(0, ITEMS_PER_PAGE - 1);
+
+        if (galleryResult.error) {
+          console.error("Fehler beim Abrufen der Galerie:", galleryResult.error.message);
+        } else {
+          setGalleryItems(galleryResult.data);
+          setFilteredItems(galleryResult.data);
+          if (galleryResult.data.length < ITEMS_PER_PAGE) setHasMore(false);
+        }
+      } catch (err) {
+        console.error("Unerwarteter Fehler:", err.message);
+      } finally {
+        setIsLoading(false); // Lade-Indikator ausblenden, nachdem alles geladen wurde
       }
-    }
-    fetchGalleryItems();
-  }, [page]);
+    };
 
-  // Highlights abrufen
-  useEffect(() => {
-    async function fetchHighlights() {
-      const { data, error } = await supabase
-        .from("posts")
-        .select("*")
-        .eq("type", "highlights");
-
-      if (error) {
-        console.error("Fehler beim Abrufen der Highlights:", error);
-      } else {
-        setHighlights(data);
-      }
-    }
-    fetchHighlights();
+    fetchData();
   }, []);
 
-  // Filterfunktion basierend auf Menüauswahl
-  const handleMenuSelect = async ({ season, year }) => {
-    setCurrentFilter({ season, year });
+  // Filter-Handler für das Menü
+  const handleFilter = async ({ season, year }) => {
     try {
       let query = supabase.from("posts").select("*").neq("type", "highlights");
 
-      if (season && year) {
-        query = query.eq("season", season).eq("year", year);
-      }
+      if (season) query = query.eq("season", season);
+      if (year) query = query.eq("year", year);
 
       const { data, error } = await query;
 
       if (error) {
-        console.error("Fehler beim Filtern der Daten:", error);
-      } else {
-        setFilteredItems(data);
+        console.error("Fehler beim Filtern der Galerie:", error.message);
+        return;
       }
+
+      setFilteredItems(data); // Aktualisiere die gefilterten Einträge
     } catch (err) {
       console.error("Unerwarteter Fehler:", err.message);
     }
   };
 
-  // Intersection Observer für Infinite Scroll
+  // Infinite Scroll
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && hasMore) {
+        if (entries[0].isIntersecting) {
           setPage((prevPage) => prevPage + 1);
         }
       },
@@ -106,86 +110,129 @@ export default function HomePage() {
 
     if (loader.current) observer.observe(loader.current);
     return () => observer.disconnect();
-  }, [hasMore]);
+  }, []);
+
+  useEffect(() => {
+    const fetchMoreGalleryItems = async () => {
+      if (isLoadingGallery.current || !hasMore) return;
+      isLoadingGallery.current = true;
+
+      try {
+        const { data, error } = await supabase
+          .from("posts")
+          .select("*")
+          .neq("type", "highlights")
+          .order("id", { ascending: true })
+          .range(page * ITEMS_PER_PAGE, (page + 1) * ITEMS_PER_PAGE - 1);
+
+        if (error) {
+          console.error("Fehler beim Abrufen weiterer Galerie-Daten:", error.message);
+        } else {
+          setGalleryItems((prevItems) => [...prevItems, ...data]);
+          setFilteredItems((prevItems) => [...prevItems, ...data]);
+          if (data.length < ITEMS_PER_PAGE) setHasMore(false);
+        }
+      } catch (err) {
+        console.error("Unerwarteter Fehler:", err.message);
+      } finally {
+        isLoadingGallery.current = false;
+      }
+    };
+
+    fetchMoreGalleryItems();
+  }, [page]);
 
   // Modal schließen bei Escape-Taste
   useEscape(() => setSelectedItem(null));
 
   return (
-    <div className="homepage-layout">
-      {/* Highlights */}
-      <section className="highlights">
-        {highlights.map((highlight) => (
-          <div key={highlight.id} className="highlight-item">
-            <video
-              controls
-              loop
-              className="highlight-video"
-              src={highlight.image_url}
-              poster={highlight.poster_url || ""}
-            ></video>
-            <h3
-              onClick={() => setSelectedItem(highlight)}
-              style={{ cursor: "pointer", textDecoration: "underline" }}
-            >
-              {highlight.title}
-              <ArrowTopRightIcon style={{ transform: "translateY(2px)" }} />
-            </h3>
-            <ReactMarkdown className="markdown-description">
-              {highlight.description.split(" ").slice(0, 60).join(" ") + "..."}
-            </ReactMarkdown>
+    <div className="loading-section">
+      {/* Lade-Indikator */}
+      {isLoading && (
+        <div className="loading-overlay">
+          <div className="loading">
+            <img
+              src="https://ygzqbzzaabuwtdudfvsm.supabase.co/storage/v1/object/public/snapwave-media/low-q/snapwave-logo-roll.png"
+              alt="roll-loader"
+              className="roll-loader"
+            />
+            <img
+              src="https://ygzqbzzaabuwtdudfvsm.supabase.co/storage/v1/object/public/snapwave-media/snapwave-logo.png"
+              alt="loader"
+              className="static-loader"
+            />
           </div>
-        ))}
-      </section>
-
-      {/* Galerie */}
-      <section className="gallery">
-        <div className="gallery-title-place">
-          <a href="/gallery">Galerie</a>
-          <a href="/gallery" id="gallery-title-arrow-icon">
-            <ArrowTopRightIcon />
-          </a>
         </div>
-
-        {/* Masonry-Grid */}
-        <Masonry
-          breakpointCols={{
-            default: 2,
-            480: 1,
-          }}
-          className="masonry-grid"
-          columnClassName="masonry-grid_column"
-        >
-          {filteredItems.map((item) => (
-            <div key={item.id} className="gallery-item">
-              <img
-                src={getOptimizedImageUrl(item.image_url)}
-                alt={item.title}
-                onClick={() => setSelectedItem(item)}
-              />
-              <h4 className="gallery-date">
-                {new Date(item.created_at).toLocaleDateString("de-DE", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </h4>
-              <div className="gallery-title-container">
-                <h3 className="gallery-title">{item.title}</h3>
-              </div>
-              <p className="gallery-description">{item.description}</p>
+      )}
+  
+      {/* Hauptinhalt */}
+      <div className="homepage-layout">
+        {/* Highlights */}
+        <section className="highlights">
+          {highlights.map((highlight) => (
+            <div key={highlight.id} className="highlight-item">
+              <video
+                controls
+                loop
+                className="highlight-video"
+                src={highlight.low_image_url}
+                poster={highlight.poster_url || ""}
+              ></video>
+              <h3
+                onClick={() => setSelectedItem(highlight)}
+                style={{ cursor: "pointer", textDecoration: "underline" }}
+              >
+                {highlight.title}
+                <ArrowTopRightIcon style={{ transform: "translateY(2px)" }} />
+              </h3>
+              <ReactMarkdown className="markdown-description">
+                {highlight.description.split(" ").slice(0, 60).join(" ") + "..."}
+              </ReactMarkdown>
             </div>
           ))}
-        </Masonry>
-
-        {hasMore && <div ref={loader} className="loading">Lädt...</div>}
-      </section>
-
-      {/* Modal */}
-      <Modal selectedItem={selectedItem} onClose={() => setSelectedItem(null)} />
-
-      {/* Menü */}
-      <Menu onFilter={handleMenuSelect} />
+        </section>
+  
+        {/* Galerie */}
+        <section className="gallery">
+          <Masonry
+            breakpointCols={{
+              2800: 3,
+              2000: 3,
+              1800: 2,
+              1200: 2,
+              default: 1,
+            }}
+            className="masonry-grid"
+            columnClassName="masonry-grid_column"
+          >
+            {filteredItems.map((item) => (
+              <div key={item.id} className="gallery-item">
+                <img
+                  src={getOptimizedImageUrl(item.low_image_url)}
+                  alt={item.title}
+                  onClick={() => setSelectedItem(item)}
+                />
+                <h4 className="gallery-date">
+                  {new Date(item.created_at).toLocaleDateString("de-DE", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </h4>
+                <div className="gallery-title-container">
+                  <h3 className="gallery-title">{item.title}</h3>
+                </div>
+                <p className="gallery-description">{item.description}</p>
+              </div>
+            ))}
+          </Masonry>
+          {hasMore && <div ref={loader} className="loading"></div>}
+          {!hasMore && <div className="end-of-content">Keine weiteren Inhalte.</div>}
+        </section>
+  
+        <Modal selectedItem={selectedItem} onClose={() => setSelectedItem(null)} />
+        <Menu onFilter={handleFilter} />
+      </div>
     </div>
   );
 }
