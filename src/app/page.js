@@ -175,6 +175,7 @@ export default function HomePage() {
               <video
                 controls
                 loop
+                preload="auto"
                 className="highlight-video"
                 src={highlight.image_url}
                 poster={highlight.poster_url || ""}

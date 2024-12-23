@@ -51,12 +51,32 @@ body {
     transition: transform 0.3s ease;
 }
 
+
 @media (max-width: 768px) {
     .modal-content {
         max-width: 80%;
     }
 }
 
+.modal.fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.95); /* Vollbild-Hintergrund */
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal.fullscreen img {
+    max-width: 100%; /* Volle Breite */
+    max-height: 100%; /* Volle Höhe */
+    object-fit: contain; /* Bild vollständig anzeigen */
+    
+}
 
 /* Bild im Modal */
 .modal-content img {
