@@ -32,36 +32,43 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    touch-action: manipulation;
+    overscroll-behavior: none;
 }
+
+html body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
 .masonry-grid {
     display: flex; /* Flexbox für Masonry */
-    margin-left: -10px; /* Optional: Entfernt negativen Abstand */
-    width: auto; /* Verhindert Einschränkungen der Breite */
+    margin-left: 0; /* Optional: Entfernt negativen Abstand */
+    width: 100%; /* Verhindert Einschränkungen der Breite */
 }
 
 .masonry-grid_column {
-    padding-left: 10px; /* Abstand zwischen den Spalten */
     background-clip: padding-box;
+    margin: 0 0.5rem 0 0.5rem;
 }
 
 /* Gallery Container */
-.gallery {
-    padding: 10px;
+.small-gallery {
+    padding: 0.5rem;
     background-color: #fff;
     border-left: 2px solid #000;
     margin: 0 auto; /* Zentriert die Galerie */
-    max-width: 900px; /* Optional: Maximale Breite für zwei Spalten */
 }
 
 /* Einzelne Posts */
-.gallery-item {
+.small-gallery-item {
     display: flex;
     flex-direction: column; /* Stapelt Bild und Text */
     background: #fff;
     overflow: hidden;
 }
 
-.gallery h2 {
+.small-gallery h2 {
     text-align: left; /* Links ausrichten */
     margin: -0.6rem 0 0 -0.6rem; /* Keine zusätzlichen Abstände */
     padding-left: 10px; /* Optionaler Abstand vom linken Rand */
@@ -72,7 +79,7 @@ body {
     height: 40px; /* Gleiche Höhe sicherstellen */
     text-transform: uppercase; /* Großbuchstaben */
 }
-.gallery a {
+.small-gallery a {
     color: #000;
     text-align: left; /* Links ausrichten */
     margin: -0.6rem 0 0 -0.6rem; /* Keine zusätzlichen Abstände */
@@ -83,36 +90,21 @@ body {
     align-items: center; /* Vertikale Ausrichtung */
     height: 40px; /* Gleiche Höhe sicherstellen */
     text-transform: uppercase; /* Großbuchstaben */
-    text-decoration: underline 2px; /* Keine Unterstreichung */
     transition: color 0.3s ease; /* Smooth transition */
 }
 
-.gallery a:hover {
+.small-gallery a:hover {
     color: #030738;
 }
 
-#gallery-title-arrow-icon {
-    text-decoration: underline;
-    animation: pulse 2s infinite;
-}
 
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.1);
-    }
-    100% {
-        transform: scale(1);
-    }
-}
-
-.gallery-title {
+.small-gallery-title {
     margin: 0rem 0 0.5rem 0;
 }
 
-.gallery-date {
+
+
+.small-gallery-date {
     font-family: 'Raleway', sans-serif;
     font-weight: 400; /* Raleway Regular */
     font-size: 14px;
@@ -123,7 +115,7 @@ body {
 }
 
 /* Bilder in Posts */
-.gallery-item img {
+.small-gallery-item img {
     margin: -0.5rem 0 -0.8rem 0;
     width: 100%; /* Breite auf 100% des Containers */
     max-width: 18.75rem; /* Maximalbreite setzen, z.B. 300px in rem */
@@ -133,7 +125,7 @@ body {
 }
 
 /* Text in Posts */
-.gallery-item p {
+.small-gallery-item p {
     margin: 0 0 0.7rem 0;
     color: #000;
     font-size: 14px;
@@ -141,10 +133,22 @@ body {
     font-weight: 200; /* Raleway-ExtraLight */
 }
 
-.gallery-title-place {
+.small-gallery-title-place {
     display: flex;
     align-items: center;
-    gap: 0.1rem; /* Abstand zwischen den Elementen */
+    gap: 0rem; /* Abstand zwischen den Elementen */
+}
+
+.small-gallery-title-place svg {
+    margin-top: -0.5rem;
+}
+.small-gallery-title-place a {
+    text-decoration: none;
+}
+
+.small-gallery-title-place a:hover {
+    text-decoration: underline 0.125rem;
+    text-underline-offset: 0.2rem;
 }
 
 
@@ -153,7 +157,7 @@ body {
     justify-content: space-between;
     align-items: flex-start;
     width: 100%;
-    padding: 0 1rem;
+    padding: 0 1rem 0 0;
     box-sizing: border-box; /* Verhindert Overflow durch Padding */
   }
   
@@ -161,7 +165,7 @@ body {
     flex: 3; /* Highlights nehmen den verbleibenden Platz ein */
   }
   
-  .gallery {
+  .small-gallery {
     flex: 2; /* Die Galerie hat mehr Platz */
   }
   
@@ -171,6 +175,8 @@ body {
 
 /* Highlights-Section */
 .highlights {
+    background-color: #000;
+    color: #fff;
     display: flex;
     flex-direction: column;
     padding: 0 0 0 0;
@@ -201,6 +207,7 @@ body {
 
 /* Titel */
 .highlight-item h3 {
+    color: #fff;
     font-size: 1.25rem;
     font-weight: bold;
     margin: 0.5rem 1rem -0.5rem 1rem;
@@ -210,7 +217,7 @@ body {
 /* Beschreibung */
 .highlight-item p {
     font-size: 1rem;
-    color: #555;
+    color: #fff;
     font-family: 'Raleway', sans-serif;
     margin: 0.5rem 1rem 0 1rem;
 }
@@ -268,100 +275,157 @@ body {
     color: #0056b3;
 }
 
-/* Navbar */
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #fff;
-    padding: 0.625rem 1rem;
-    border-bottom: 2px solid #000;
-    margin-right: 1rem;
-    flex-wrap: nowrap;
-    overflow: hidden;
+    padding: 0.5rem 0 0.5rem 0;
+    margin: 0 0 0 0;
+    border: none;
+    background: none;
+    width: calc(100% - 1rem); /* Breite um 1rem reduziert */
+    box-sizing: border-box;
+    border-bottom: 2px #000 solid;
 }
 
 .navbar-left {
-    flex-grow: 1;
-    text-align: left;
-}
-
-.navbar-logo {
-    font-size: 3rem;
-    font-weight: 700; /* Raleway-Black */
-    letter-spacing: 4.5rem;
-    text-transform: uppercase;
-    transform: scaleY(1.5);
-    white-space: nowrap;
-    margin: 0;
-    flex-shrink: 1;
-    transition: letter-spacing 0.3s ease;
-}
-
-.navbar-right ul {
-    list-style: none;
     display: flex;
-    gap: 20px;
+    align-items: center;
+    justify-content: space-between; /* Gleiche Abstände zwischen allen Elementen */
+    width: 100%;
+    padding: 0 10px; /* Fügt einen kleinen Abstand zu den Seiten hinzu */
+}
+
+.navbar-right {
+    display: flex;
+    gap: 1rem; /* Abstand zwischen den Menüelementen */
+    padding: 0;
+    margin: 0 0 0 1rem;
+    list-style: none; /* Entfernt Aufzählungspunkte */
+}
+
+/*NAVBAR-LOGO SVG*/
+/* Stil für den svg-container, um alle Buchstaben nebeneinander zu haben */
+.svg-logo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Gleichmäßige Verteilung der SVGs */
+    white-space: nowrap;
+    width: 100%;
+}
+
+
+.svg-logo svg {
+    flex-grow: 0; /* Stellt sicher, dass die SVGs ihre Größe beibehalten */
+    flex-shrink: 0; /* Verhindert das Schrumpfen der SVGs */
+    height: 4rem; /* Einheitliche Höhe */
+}
+
+.navbar a {
+    text-decoration: none; /* Keine Unterstreichung */
+    color: #000; /* Standardfarbe Schwarz */
+    font-family: 'Raleway', sans-serif; /* Einheitliche Schriftart */
+    font-weight: 700; /* Fett (Raleway-Bold) */
     margin: 0;
     padding: 0;
-    justify-content: flex-end;
-    flex-wrap: nowrap;
 }
 
-.navbar-right li {
-    font-size: 16px;
-    font-weight: bold;
-    flex-shrink: 0;
+.navbar a:hover {
+    text-decoration: underline 2px;
+    text-underline-offset: 0.2rem;
 }
 
-.navbar-right a {
-    text-decoration: none;
-    color: black;
-    transition: color 0.2s;
+.navbar ul {
+    list-style: none; /* Entfernt Aufzählungspunkte */
+    padding: 0; /* Kein Innenabstand */
+    margin: 0; /* Kein Außenabstand */
+    display: flex; /* Horizontal anordnen */
+    gap: 1rem; /* Abstand zwischen den Elementen */
 }
 
-.navbar-right a:hover {
-    color: #666;
+.navbar li {
+    font-size: 1rem; /* Einheitliche Schriftgröße */
+    font-weight: normal; /* Normales Gewicht */
+    color: inherit; /* Farbe von Eltern übernehmen */
+    margin: 0;
+    padding: 0;
 }
 
-/* Anpassungen für kleinere Bildschirme */
 @media (max-width: 768px) {
-    .homepage-layout {
-        grid-template-columns: 1fr; /* Alles in eine Spalte */
-        gap: 10px;
+    .navbar {
+        display: flex;
+        flex-direction: column; /* Elemente vertikal anordnen */
+        align-items: center;   /* Zentriert ausrichten */
+        margin: none;
+        padding: none;
+    }
+  
+    .navbar-left {
+        order: 1; /* Nach oben */
+        margin-bottom: 0.5rem; /* Abstand nach unten */
+    }
+  
+    .navbar-right {
+        order: 2; /* Nach unten */
     }
 
     .navbar {
-        flex-wrap: wrap;
-    }
-
-    .navbar-left {
         width: 100%;
-        text-align: center;
     }
 
-    .navbar-right ul {
-        flex-direction: column;
-        gap: 10px;
+    .svg-logo {
+        margin: 0 0.5rem 0 0.5rem;
     }
+
+    html, body {
+        overflow-x: hidden;
+    }
+
+    .homepage-layout {
+        padding: 0 0 0 0;
+    }
+
+    .homepage-layout {
+        flex-direction: column; /* Elemente vertikal anordnen */
+        align-items: stretch; /* Elemente über die gesamte Breite strecken */
+    }
+
+    .small-gallery {
+        padding-left: 1rem;
+        padding-right: 0;
+    }
+
+    .small-gallery-item {
+        width: 100%;
+        margin: none;
+        gap: 1rem;
+    }
+
+    .small-gallery img {
+        max-width: 95%;
+        align-content: flex-end;
+        width: 100%;
+        height: auto;
+    }
+
+    .masonry-grid_column {
+        margin: 0;
+    }
+
+    .menu {
+        display: none;
+    }
+
+    .small-gallery-date, .small-gallery-description {
+        display: none;
+    }
+
+    .small-gallery-title-place {
+        margin: 0 0 0 -0.6rem;
+    }
+
 }
 
-h3:hover .highlight-arrow {
-    transform: translateX(5px); /* Pfeil bewegt sich leicht nach rechts beim Hover */
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-  
 /* Overlay für den Lade-Indikator */
 .loading-overlay {
     position: fixed;

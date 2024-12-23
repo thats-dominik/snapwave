@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { createClient } from "@supabase/supabase-js";
 import ReactMarkdown from "react-markdown";
 import ArrowTopRightIcon from "@/app/icons/ArrowTopRight";
+import ArrowTopRightIconWhite from "@/app/icons/ArrowTopRightWhite";
 import Modal from "@/app/components/Modal";
 import useEscape from "@/app/components/handleEsc";
 import Menu from "@/app/components/Menu";
@@ -175,7 +176,7 @@ export default function HomePage() {
                 controls
                 loop
                 className="highlight-video"
-                src={highlight.low_image_url}
+                src={highlight.image_url}
                 poster={highlight.poster_url || ""}
               ></video>
               <h3
@@ -183,7 +184,7 @@ export default function HomePage() {
                 style={{ cursor: "pointer", textDecoration: "underline" }}
               >
                 {highlight.title}
-                <ArrowTopRightIcon style={{ transform: "translateY(2px)" }} />
+                <ArrowTopRightIconWhite style={{ transform: "translateY(2px)", stroke: "#fff" }} />
               </h3>
               <ReactMarkdown className="markdown-description">
                 {highlight.description.split(" ").slice(0, 60).join(" ") + "..."}
@@ -193,36 +194,40 @@ export default function HomePage() {
         </section>
   
         {/* Galerie */}
-        <section className="gallery">
+        <section className="small-gallery">
+          <div className="small-gallery-title-place">
+        <a href="/gallery">GALLERY</a><ArrowTopRightIcon/>
+        </div>
           <Masonry
             breakpointCols={{
               2800: 3,
               2000: 3,
               1800: 2,
-              1200: 2,
-              default: 1,
+              1000: 1,
+              768: 2,
+              400: 1,
             }}
             className="masonry-grid"
             columnClassName="masonry-grid_column"
           >
             {filteredItems.map((item) => (
-              <div key={item.id} className="gallery-item">
+              <div key={item.id} className="small-gallery-item">
                 <img
                   src={getOptimizedImageUrl(item.low_image_url)}
                   alt={item.title}
                   onClick={() => setSelectedItem(item)}
                 />
-                <h4 className="gallery-date">
+                <h4 className="small-gallery-date">
                   {new Date(item.created_at).toLocaleDateString("de-DE", {
                     year: "numeric",
                     month: "long",
                     day: "numeric",
                   })}
                 </h4>
-                <div className="gallery-title-container">
-                  <h3 className="gallery-title">{item.title}</h3>
+                <div className="small-gallery-title-container">
+                  <h3 className="small-gallery-title">{item.title}</h3>
                 </div>
-                <p className="gallery-description">{item.description}</p>
+                <p className="small-gallery-description">{item.description}</p>
               </div>
             ))}
           </Masonry>

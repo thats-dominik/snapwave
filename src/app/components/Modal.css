@@ -60,6 +60,12 @@ body::-webkit-scrollbar-thumb:hover {
     transition: transform 0.3s ease;
 }
 
+@media (max-width: 768px) {
+    .modal-content {
+        max-width: 80%;
+    }
+}
+
 
 /* Bild im Modal */
 .modal-content img {

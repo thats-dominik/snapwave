@@ -1,4 +1,4 @@
-export default function ArrowTopRightIcon({ width = 14, height = 14, color = "#000", style = {} }) {
+export default function ArrowTopRightIconWhite ({ width = 14, height = 14, color = "#fff", style = {} }) {
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -43,5 +43,3 @@ export default function ArrowTopRightIcon({ width = 14, height = 14, color = "#0
       </svg>
     );
   }
-
- 
