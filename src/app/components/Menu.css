@@ -64,7 +64,8 @@
   }
   
   .menu-button:hover {
-    color: #0070f3;
+    text-decoration: underline 2px;
+    text-underline-offset: 2px;
   }
 /* Abstand für spezifischen Button */
 #scramble-button {

@@ -158,7 +158,7 @@ export default function HomePage() {
               className="roll-loader"
             />
             <img
-              src="https://ygzqbzzaabuwtdudfvsm.supabase.co/storage/v1/object/public/snapwave-media/snapwave-logo.png"
+              src="https://ygzqbzzaabuwtdudfvsm.supabase.co/storage/v1/object/public/snapwave-media/media/snapwave-logo.png"
               alt="loader"
               className="static-loader"
             />
@@ -203,7 +203,7 @@ export default function HomePage() {
               2800: 3,
               2000: 3,
               1800: 2,
-              1000: 1,
+              1040: 1,
               768: 2,
               400: 1,
             }}
