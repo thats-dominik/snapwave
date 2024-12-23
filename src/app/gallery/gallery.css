@@ -117,3 +117,10 @@ box-shadow: 0 8px 15px rgba(0, 0, 0, 0.8); /* Schatten hinzufügen */
         transform: rotate(360deg);
     }
 }
+
+@media (max-width: 768px) {
+  
+  .gallery_page {
+    padding: 0.5rem 0.5rem 0 0.5rem;
+  }
+}

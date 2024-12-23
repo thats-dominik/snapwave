@@ -178,7 +178,7 @@ export default function HomePage() {
                 className="highlight-video"
                 src={highlight.image_url}
                 poster={highlight.poster_url || ""}
-              ></video>
+              ></video>   
               <h3
                 onClick={() => setSelectedItem(highlight)}
                 style={{ cursor: "pointer", textDecoration: "underline" }}
@@ -187,7 +187,7 @@ export default function HomePage() {
                 <ArrowTopRightIconWhite style={{ transform: "translateY(2px)", stroke: "#fff" }} />
               </h3>
               <ReactMarkdown className="markdown-description">
-                {highlight.description.split(" ").slice(0, 60).join(" ") + "..."}
+                {highlight.description.split(" ").slice(0, 47).join(" ") + "..."}
               </ReactMarkdown>
             </div>
           ))}

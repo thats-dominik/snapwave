@@ -62,7 +62,7 @@ export default function GalleryPage() {
         <div className="loading-overlay">
           <div className="loading">
             <img
-              src="https://ygzqbzzaabuwtdudfvsm.supabase.co/storage/v1/object/public/snapwave-media/snapwave-logo.png"
+              src="https://ygzqbzzaabuwtdudfvsm.supabase.co/storage/v1/object/public/snapwave-media/media/snapwave-logo.png"
               alt="loader"
               className="static-loader"
             />
