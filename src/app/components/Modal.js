@@ -3,10 +3,10 @@
 import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import "@/app/components/Modal.css";
+import LeafletMap from "./LeafletMap"; // Importiere die LeafletMap-Komponente
 
 export default function Modal({ selectedItem, onClose }) {
     const [isOpen, setIsOpen] = useState(false);
-    const [isFullscreenImage, setIsFullscreenImage] = useState(false); // Zustand für Fullscreen-Bild
 
     useEffect(() => {
         if (selectedItem) {
@@ -15,11 +15,7 @@ export default function Modal({ selectedItem, onClose }) {
 
             const handleKeyDown = (e) => {
                 if (e.key === "Escape") {
-                    if (isFullscreenImage) {
-                        setIsFullscreenImage(false); // Vollbild schließen
-                    } else {
-                        handleClose(); // Modal schließen
-                    }
+                    handleClose(); // Modal bedingungslos schließen
                 }
             };
 
@@ -30,30 +26,47 @@ export default function Modal({ selectedItem, onClose }) {
                 document.body.style.overflow = "auto";
             };
         }
-    }, [selectedItem, isFullscreenImage]);
+    }, [selectedItem]);
 
     const handleClose = () => {
         setIsOpen(false);
-        setTimeout(onClose, 300);
-    };
-
-    const handleImageClick = () => {
-        setIsFullscreenImage(!isFullscreenImage); // Wechsel zwischen Normal- und Vollbildmodus
+        setTimeout(onClose, 300); // Timeout für Schließanimation
     };
 
     if (!selectedItem && !isOpen) return null;
 
     const fallbackImage = selectedItem?.poster_url || selectedItem?.image_url;
 
+    // Funktion zum Extrahieren des LeafletMap-Tags aus der Beschreibung
+    const extractLeafletMap = (description) => {
+        const leafletRegex = /<LeafletMap\s+latitude="([^"]+)"\s+longitude="([^"]+)"\s+title="([^"]+)"\s*\/>/i;
+        const match = description?.match(leafletRegex);
+
+        if (match) {
+            const [, latitude, longitude, title] = match;
+            return {
+                latitude: parseFloat(latitude),
+                longitude: parseFloat(longitude),
+                title,
+            };
+        }
+
+        return null;
+    };
+
+    const mapDataFromDescription = extractLeafletMap(selectedItem?.description);
+    const cleanedDescription = selectedItem?.description?.replace(
+        /<LeafletMap\s+latitude="[^"]+"\s+longitude="[^"]+"\s+title="[^"]+"\s*\/>/i,
+        ""
+    );
+
     return (
         <div
-            className={`modal ${isOpen ? "open" : ""} ${
-                isFullscreenImage ? "fullscreen" : ""
-            }`}
-            onClick={!isFullscreenImage ? handleClose : undefined}
+            className={`modal ${isOpen ? "open" : ""}`}
+            onClick={handleClose}
         >
             <div
-                className={`modal-content ${isFullscreenImage ? "fullscreen" : ""}`}
+                className="modal-content"
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Bild oder Video */}
@@ -66,37 +79,54 @@ export default function Modal({ selectedItem, onClose }) {
                     >
                         Dein Browser unterstützt das Video-Tag nicht.
                     </video>
-                ) : (
+                ) : fallbackImage ? (
                     <img
                         src={fallbackImage}
                         alt={selectedItem?.title || "Fallback Image"}
-                        onClick={handleImageClick} // Vollbild öffnen bei Klick
+                    />
+                ) : (
+                    <p className="fallback-text">Kein Bild vorhanden</p>
+                )}
+
+                {/* Titel und Beschreibung */}
+                <h3>{selectedItem?.title || "Kein Titel vorhanden"}</h3>
+                {cleanedDescription && (
+                    <ReactMarkdown>{cleanedDescription}</ReactMarkdown>
+                )}
+                <p className="date">
+                    {selectedItem?.created_at
+                        ? new Date(selectedItem.created_at).toLocaleDateString(
+                              "de-DE",
+                              {
+                                  year: "numeric",
+                                  month: "long",
+                                  day: "numeric",
+                              }
+                          )
+                        : "Kein Datum verfügbar"}
+                </p>
+                {/* Karte */}
+                {(mapDataFromDescription ||
+                    (selectedItem?.latitude && selectedItem?.longitude)) && (
+                    <LeafletMap
+                        latitude={
+                            mapDataFromDescription?.latitude ||
+                            selectedItem?.latitude
+                        }
+                        longitude={
+                            mapDataFromDescription?.longitude ||
+                            selectedItem?.longitude
+                        }
+                        title={
+                            mapDataFromDescription?.title ||
+                            selectedItem?.title
+                        }
                     />
                 )}
 
-                {/* Titel und Beschreibung nur anzeigen, wenn kein Vollbild aktiv ist */}
-                {!isFullscreenImage && (
-                    <>
-                        <h3>{selectedItem?.title || "Kein Titel vorhanden"}</h3>
-                        {selectedItem?.description && (
-                            <ReactMarkdown>{selectedItem.description}</ReactMarkdown>
-                        )}
-                        <p className="date">
-                            {new Date(selectedItem?.created_at).toLocaleDateString(
-                                "de-DE",
-                                {
-                                    year: "numeric",
-                                    month: "long",
-                                    day: "numeric",
-                                }
-                            )}
-                        </p>
-
-                        <button className="btn-70" onClick={handleClose}>
-                            Schliessen
-                        </button>
-                    </>
-                )}
+                <button className="btn-70" onClick={handleClose}>
+                    Schliessen
+                </button>
             </div>
         </div>
     );

@@ -36,7 +36,7 @@ export default function HomePage() {
 
   const ITEMS_PER_PAGE = 5;
 
-  // Alle Daten laden (Highlights und Galerie)
+  // Daten abrufen (Highlights und Galerie)
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -70,33 +70,12 @@ export default function HomePage() {
       } catch (err) {
         console.error("Unerwarteter Fehler:", err.message);
       } finally {
-        setIsLoading(false); // Lade-Indikator ausblenden, nachdem alles geladen wurde
+        setIsLoading(false); // Lade-Indikator ausblenden
       }
     };
 
     fetchData();
   }, []);
-
-  // Filter-Handler für das Menü
-  const handleFilter = async ({ season, year }) => {
-    try {
-      let query = supabase.from("posts").select("*").neq("type", "highlights");
-
-      if (season) query = query.eq("season", season);
-      if (year) query = query.eq("year", year);
-
-      const { data, error } = await query;
-
-      if (error) {
-        console.error("Fehler beim Filtern der Galerie:", error.message);
-        return;
-      }
-
-      setFilteredItems(data); // Aktualisiere die gefilterten Einträge
-    } catch (err) {
-      console.error("Unerwarteter Fehler:", err.message);
-    }
-  };
 
   // Infinite Scroll
   useEffect(() => {
@@ -146,6 +125,27 @@ export default function HomePage() {
   // Modal schließen bei Escape-Taste
   useEscape(() => setSelectedItem(null));
 
+  // Filter-Handler für das Menü
+  const handleFilter = async ({ season, year }) => {
+    try {
+      let query = supabase.from("posts").select("*").neq("type", "highlights");
+
+      if (season) query = query.eq("season", season);
+      if (year) query = query.eq("year", year);
+
+      const { data, error } = await query;
+
+      if (error) {
+        console.error("Fehler beim Filtern der Galerie:", error.message);
+        return;
+      }
+
+      setFilteredItems(data); // Aktualisiere die gefilterten Einträge
+    } catch (err) {
+      console.error("Unerwarteter Fehler:", err.message);
+    }
+  };
+
   return (
     <div className="loading-section">
       {/* Lade-Indikator */}
@@ -165,7 +165,7 @@ export default function HomePage() {
           </div>
         </div>
       )}
-  
+
       {/* Hauptinhalt */}
       <div className="homepage-layout">
         {/* Highlights */}
@@ -179,7 +179,7 @@ export default function HomePage() {
                 className="highlight-video"
                 src={highlight.image_url}
                 poster={highlight.poster_url || ""}
-              ></video>   
+              ></video>
               <h3
                 onClick={() => setSelectedItem(highlight)}
                 style={{ cursor: "pointer", textDecoration: "underline" }}
@@ -193,12 +193,13 @@ export default function HomePage() {
             </div>
           ))}
         </section>
-  
+
         {/* Galerie */}
         <section className="small-gallery">
           <div className="small-gallery-title-place">
-        <a href="/gallery">GALLERY</a><ArrowTopRightIcon/>
-        </div>
+            <a href="/gallery">GALLERY</a>
+            <ArrowTopRightIcon />
+          </div>
           <Masonry
             breakpointCols={{
               2800: 3,
@@ -235,7 +236,7 @@ export default function HomePage() {
           {hasMore && <div ref={loader} className="loading"></div>}
           {!hasMore && <div className="end-of-content">Keine weiteren Inhalte.</div>}
         </section>
-  
+
         <Modal selectedItem={selectedItem} onClose={() => setSelectedItem(null)} />
         <Menu onFilter={handleFilter} />
       </div>
