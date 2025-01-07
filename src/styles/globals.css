@@ -258,7 +258,7 @@ html body {
     align-items: center;
     justify-content: space-between; /* Gleiche Abstände zwischen allen Elementen */
     width: 100%;
-    padding: 0 10px; /* Fügt einen kleinen Abstand zu den Seiten hinzu */
+    padding: 0 0px; /* Fügt einen kleinen Abstand zu den Seiten hinzu */
 }
 
 .navbar-right {
@@ -279,6 +279,18 @@ html body {
     width: 100%;
 }
 
+@media (max-width: 418px) {
+    .svg-logo svg {
+        height: 3rem !important;
+        margin-right: 0.1rem;
+    }
+}
+@media (max-width: 318px) {
+    .svg-logo svg {
+        height: 2rem !important;
+        margin-right: 0.1rem;
+    }
+}
 
 .svg-logo svg {
     flex-grow: 0; /* Stellt sicher, dass die SVGs ihre Größe beibehalten */

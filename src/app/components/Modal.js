@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import "@/app/components/Modal.css";
-import LeafletMap from "./LeafletMap"; // Importiere die LeafletMap-Komponente
+import LeafletMap from "./LeafletMap";
 
 export default function Modal({ selectedItem, onClose }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -11,11 +11,11 @@ export default function Modal({ selectedItem, onClose }) {
     useEffect(() => {
         if (selectedItem) {
             setIsOpen(true);
-            document.body.style.overflow = "hidden";
+            document.body.style.overflow = "hidden"; // Hintergrund scroll sperren
 
             const handleKeyDown = (e) => {
                 if (e.key === "Escape") {
-                    handleClose(); // Modal bedingungslos schließen
+                    handleClose();
                 }
             };
 
@@ -23,21 +23,21 @@ export default function Modal({ selectedItem, onClose }) {
 
             return () => {
                 window.removeEventListener("keydown", handleKeyDown);
-                document.body.style.overflow = "auto";
+                document.body.style.overflow = "auto"; // Hintergrund scroll wieder aktivieren
             };
         }
     }, [selectedItem]);
 
     const handleClose = () => {
         setIsOpen(false);
-        setTimeout(onClose, 300); // Timeout für Schließanimation
+        setTimeout(onClose, 300); // Animation abwarten
     };
 
     if (!selectedItem && !isOpen) return null;
 
     const fallbackImage = selectedItem?.poster_url || selectedItem?.image_url;
 
-    // Funktion zum Extrahieren des LeafletMap-Tags aus der Beschreibung
+    // Extrahiert LeafletMap-Tags aus der Beschreibung
     const extractLeafletMap = (description) => {
         const leafletRegex = /<LeafletMap\s+latitude="([^"]+)"\s+longitude="([^"]+)"\s+title="([^"]+)"\s*\/>/i;
         const match = description?.match(leafletRegex);
@@ -50,7 +50,6 @@ export default function Modal({ selectedItem, onClose }) {
                 title,
             };
         }
-
         return null;
     };
 
@@ -61,15 +60,11 @@ export default function Modal({ selectedItem, onClose }) {
     );
 
     return (
-        <div
-            className={`modal ${isOpen ? "open" : ""}`}
-            onClick={handleClose}
-        >
+        <div className={`modal ${isOpen ? "open" : ""}`} onClick={handleClose}>
             <div
                 className="modal-content"
                 onClick={(e) => e.stopPropagation()}
             >
-                {/* Bild oder Video */}
                 {selectedItem?.video_url ? (
                     <video
                         controls
@@ -88,7 +83,6 @@ export default function Modal({ selectedItem, onClose }) {
                     <p className="fallback-text">Kein Bild vorhanden</p>
                 )}
 
-                {/* Titel und Beschreibung */}
                 <h3>{selectedItem?.title || "Kein Titel vorhanden"}</h3>
                 {cleanedDescription && (
                     <ReactMarkdown>{cleanedDescription}</ReactMarkdown>
@@ -105,7 +99,6 @@ export default function Modal({ selectedItem, onClose }) {
                           )
                         : "Kein Datum verfügbar"}
                 </p>
-                {/* Karte */}
                 {(mapDataFromDescription ||
                     (selectedItem?.latitude && selectedItem?.longitude)) && (
                     <LeafletMap

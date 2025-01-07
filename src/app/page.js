@@ -6,6 +6,7 @@ import ReactMarkdown from "react-markdown";
 import ArrowTopRightIcon from "@/app/icons/ArrowTopRight";
 import ArrowTopRightIconWhite from "@/app/icons/ArrowTopRightWhite";
 import Modal from "@/app/components/Modal";
+import HighlightModal from "@/app/components/HighlightsModal"; // Neues HighlightModal importiert
 import useEscape from "@/app/components/handleEsc";
 import Menu from "@/app/components/Menu";
 import Masonry from "react-masonry-css";
@@ -13,7 +14,7 @@ import Masonry from "react-masonry-css";
 // Supabase-Client konfigurieren
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
 );
 
 // Hilfsfunktion zur Optimierung der Bildgröße
@@ -28,13 +29,14 @@ export default function HomePage() {
   const [highlights, setHighlights] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [isHighlight, setIsHighlight] = useState(false); // Unterscheidung zwischen Highlight und Gallery
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const isLoadingGallery = useRef(false);
   const loader = useRef(null);
 
-  const ITEMS_PER_PAGE = 5;
+  const ITEMS_PER_PAGE = 8;
 
   // Daten abrufen (Highlights und Galerie)
   useEffect(() => {
@@ -42,9 +44,9 @@ export default function HomePage() {
       try {
         // Highlights laden
         const highlightsResult = await supabase
-          .from("posts")
+          .from("highlights")
           .select("*")
-          .eq("type", "highlights");
+          .order("created_at", { ascending: false });
 
         if (highlightsResult.error) {
           console.error("Fehler beim Abrufen der Highlights:", highlightsResult.error.message);
@@ -171,27 +173,53 @@ export default function HomePage() {
         {/* Highlights */}
         <section className="highlights">
           {highlights.map((highlight) => (
-            <div key={highlight.id} className="highlight-item">
+            <div
+              key={highlight.id}
+              className="highlight-item"
+              onClick={() => {
+                setSelectedItem(highlight);
+                setIsHighlight(true);
+              }}
+            >
               <video
                 controls
                 loop
                 preload="auto"
                 className="highlight-video"
-                src={highlight.image_url}
+                src={highlight.video_url}
                 poster={highlight.poster_url || ""}
               ></video>
-              <h3
-                onClick={() => setSelectedItem(highlight)}
-                style={{ cursor: "pointer", textDecoration: "underline" }}
-              >
+              <h3 style={{ cursor: "pointer", textDecoration: "underline" }}>
                 {highlight.title}
                 <ArrowTopRightIconWhite style={{ transform: "translateY(2px)", stroke: "#fff" }} />
               </h3>
               <ReactMarkdown className="markdown-description">
-                {highlight.description.split(" ").slice(0, 47).join(" ") + "..."}
+                {(() => {
+                  if (!highlight.content || !Array.isArray(highlight.content.sections)) {
+                    return "Kein Inhalt verfügbar";
+                  }
+                  // Finde den ersten Abschnitt vom Typ "text"
+                  const firstTextSection = highlight.content.sections.find(
+                    (section) => section.type === "text"
+                  );
+                  if (!firstTextSection || !firstTextSection.content) {
+                    return "Kein Inhalt verfügbar";
+                  }
+                  // Begrenze den Inhalt auf 47 Wörter
+                  const truncatedContent = firstTextSection.content
+                    .split(" ")
+                    .slice(0, 47)
+                    .join(" ");
+                  return `${truncatedContent}...`;
+                })()}
               </ReactMarkdown>
             </div>
           ))}
+
+          {/* HighlightModal-Komponente */}
+          {selectedItem && isHighlight && (
+            <HighlightModal selectedItem={selectedItem} onClose={() => setSelectedItem(null)} />
+          )}
         </section>
 
         {/* Galerie */}
@@ -213,11 +241,17 @@ export default function HomePage() {
             columnClassName="masonry-grid_column"
           >
             {filteredItems.map((item) => (
-              <div key={item.id} className="small-gallery-item">
+              <div
+                key={item.id}
+                className="small-gallery-item"
+                onClick={() => {
+                  setSelectedItem(item);
+                  setIsHighlight(false);
+                }}
+              >
                 <img
                   src={getOptimizedImageUrl(item.low_image_url)}
                   alt={item.title}
-                  onClick={() => setSelectedItem(item)}
                 />
                 <h4 className="small-gallery-date">
                   {new Date(item.created_at).toLocaleDateString("de-DE", {
@@ -237,7 +271,10 @@ export default function HomePage() {
           {!hasMore && <div className="end-of-content">Keine weiteren Inhalte.</div>}
         </section>
 
-        <Modal selectedItem={selectedItem} onClose={() => setSelectedItem(null)} />
+        {/* Modals */}
+        {selectedItem && !isHighlight && (
+          <Modal selectedItem={selectedItem} onClose={() => setSelectedItem(null)} />
+        )}
         <Menu onFilter={handleFilter} />
       </div>
     </div>

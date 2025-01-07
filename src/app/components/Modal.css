@@ -2,20 +2,22 @@
 @import url('https://unpkg.com/leaflet/dist/leaflet.css');
 
 /* Allgemeine Stile */
-
 * {
-    font-family: 'Raleway', sans-serif; 
+    font-family: 'Raleway', sans-serif;
+    box-sizing: border-box;
 }
 body {
     font-family: 'Raleway', sans-serif;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+    overflow-x: hidden;
 }
+
 /* Scrollbar-Stile */
 ::-webkit-scrollbar {
-    width: 0;
+    width: 0; /* Versteckt die Scrollbar */
 }
+
 /* Modal Overlay */
 .modal {
     position: fixed;
@@ -23,7 +25,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.9); /* Dunkler Hintergrund */
+    background: rgba(0, 0, 0, 0.9);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -33,7 +35,6 @@ body {
     transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
-/* Sichtbares Modal */
 .modal.open {
     opacity: 1;
     visibility: visible;
@@ -45,13 +46,16 @@ body {
     padding: 20px;
     max-width: 40%;
     max-height: 90%;
-    overflow-y: auto;
+    overflow-y: auto; /* Ermöglicht Scrollen im Modal */
     position: relative;
     text-align: center;
-    transform: scale(0.9);
+    transform: scale(0.9); /* Start-Skalierung für Animation */
     transition: transform 0.3s ease;
 }
 
+.modal.open .modal-content {
+    transform: scale(1); /* Animation zur Normalgröße */
+}
 
 @media (max-width: 768px) {
     .modal-content {
@@ -59,6 +63,7 @@ body {
     }
 }
 
+/* Vollbild-Modal */
 .modal.fullscreen {
     position: fixed;
     top: 0;
@@ -73,19 +78,18 @@ body {
 }
 
 .modal.fullscreen img {
-    max-width: 100%; /* Volle Breite */
-    max-height: 100%; /* Volle Höhe */
+    max-width: 100%;
+    max-height: 100%;
     object-fit: contain; /* Bild vollständig anzeigen */
-    
 }
 
 /* Bild im Modal */
 .modal-content img {
-    max-width: 80%; /* Maximal 80% der Breite des Viewports */
-    max-height: 70vh; /* Maximal 70% der Höhe des Viewports */
-    margin: 0 auto; /* Zentrierung */
+    max-width: 90%;
+    max-height: 70vh;
+    margin: 0 auto;
     display: block;
-    object-fit: contain; /* Kein Beschneiden des Bildes */
+    object-fit: contain;
 }
 
 /* Titel im Modal */
@@ -111,10 +115,6 @@ body {
     margin-bottom: 1rem;
 }
 
-.modal.open .modal-content {
-    transform: scale(1);
-}
-
 /* Schließen-Button */
 .modal-content .btn-70 {
     background: #000;
@@ -125,34 +125,30 @@ body {
     font-size: 1rem;
     margin-top: 1rem;
     transition: background 0.3s, color 0.3s;
-
 }
 
 .modal-content .btn-70:hover {
-    background: #000;
-    color: #fff;
+    background: #444;
 }
 
-/*Leaflet Settings*/
-
-
+/* Leaflet Einstellungen */
 .leaflet-control-attribution {
-    display: none !important;
+    display: none !important; /* Entfernt Attribution */
 }
 
 .leaflet-container {
     border-radius: 0 !important;
     border: 2px #000 solid;
-    margin: 0 1rem 0 -0.1rem;
+    margin: 0 auto; /* Zentriert den Leaflet-Container */
 }
 
-/* Entfernt den Border-Radius vom Popup (Banner) */
+/* Popup-Stile */
 .leaflet-popup-content-wrapper {
     background-color: #000 !important;
     color: #fff !important;
     border-radius: 0 !important;
     box-shadow: none !important;
-    border: none!important;
+    border: none !important;
 }
 
 .leaflet-popup-tip {
@@ -164,8 +160,9 @@ body {
 a.leaflet-popup-close-button {
     color: #fff !important;
 }
-/* Entfernt den Border-Radius vom Zoom-Control (+/-) */
-.leaflet-control-zoom  {
+
+/* Zoom-Control-Stile */
+.leaflet-control-zoom {
     background-color: #000 !important;
     border-radius: 0 !important;
     border: 2px #000 solid !important;

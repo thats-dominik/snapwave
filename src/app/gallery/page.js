@@ -10,7 +10,7 @@ import useEscape from "@/app/components/handleEsc";
 // Supabase-Client konfigurieren
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
 );
 
 // Hilfsfunktion zur Bildoptimierung

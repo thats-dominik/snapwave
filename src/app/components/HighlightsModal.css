@@ -1,0 +1,124 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@200;400;700;900&display=swap');
+@import url('https://unpkg.com/leaflet/dist/leaflet.css');
+
+/* Allgemeine Stile */
+* {
+    font-family: 'Raleway', sans-serif;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Raleway', sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+/* Scrollbar-Stile */
+::-webkit-scrollbar {
+    width: 0; /* Versteckt die Scrollbar */
+}
+
+/* HighlightModal Overlay */
+.highlightmodal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.highlightmodal.open {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* HighlightModal-Inhalt */
+.highlightmodal-content {
+    background: #fff;
+    padding: 20px;
+    max-width: 45%;
+    max-height: 90%;
+    overflow-y: auto;
+    position: relative;
+    text-align: center;
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.highlightmodal.open .highlightmodal-content {
+    transform: scale(1);
+}
+
+@media (max-width: 768px) {
+    .highlightmodal-content {
+        max-width: 80%;
+    }
+}
+
+/* Bild im HighlightModal */
+.highlightmodal-content img {
+    max-width: 80%; /* Maximal 80% der Breite des Viewports */
+    max-height: 70vh; /* Maximal 70% der Höhe des Viewports */
+    margin: 0 auto;
+    display: block;
+    object-fit: contain; /* Kein Beschneiden des Bildes */
+    border: none; /* Optional für ein schönes Layout */
+}
+
+/* Video im HighlightModal */
+.highlightmodal-content video {
+    max-width: 100%; /* Maximal 80% der Breite des Viewports */
+    max-height: 70%; /* Maximal 70% der Höhe des Viewports */
+    margin: 0 auto;
+    display: block;
+    object-fit: contain; /* Kein Beschneiden des Videos */
+    border: none; /* Optional für ein schönes Layout */
+}
+
+/* Titel im HighlightModal */
+.highlightmodal-content h3 {
+    margin: 1rem 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #000;
+}
+
+/* Beschreibung im HighlightModal */
+.highlightmodal-content p {
+    margin: 0.5rem 0;
+    font-size: 1rem;
+    color: #000;
+    font-weight: 400;
+}
+
+/* Datum im HighlightModal */
+.highlightmodal-content .date {
+    font-size: 0.9rem;
+    color: #000;
+    margin-bottom: 1rem;
+}
+
+/* Schließen-Button */
+.highlightmodal-content .btn-70 {
+    background: #000;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 1rem;
+    transition: background 0.3s, color 0.3s;
+}
+
+.highlightmodal-content .btn-70:hover {
+    background: #444;
+}
