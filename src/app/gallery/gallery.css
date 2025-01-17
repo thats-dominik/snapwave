@@ -215,7 +215,7 @@ html, body {
 .sort-menu {
   position: fixed;
   bottom: 5rem;
-  right: 13.75rem;
+  right: 14rem;
   display: flex;
   flex-direction: column;
   gap: 0.625rem;

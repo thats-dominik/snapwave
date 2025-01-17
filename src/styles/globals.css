@@ -456,3 +456,20 @@ html body {
       transform: rotate(360deg);
     }
   }
+
+  .footer {
+    background-color: black;
+    color: white;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .footer-links a {
+    color: white;
+    margin: 0 10px;
+    text-decoration: none;
+  }
+  
+  .footer-links a:hover {
+    text-decoration: underline;
+  }
